@@ -1,0 +1,1 @@
+// LogFileManager.cpp
