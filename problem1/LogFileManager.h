@@ -1,23 +1,26 @@
-// LogFileManager.h
-
-#ifndef LOG_FILE_MANAGER_H
-#define LOG_FILE_MANAGER_H
-
+#pragma once
 #include <string>
+#include <vector>
+#include <memory>
+#include <map>
 #include <fstream>
-#include <iostream>
-#include <mutex>
 
 class LogFileManager {
 public:
-    LogFileManager(const std::string& filename);
+    LogFileManager();
     ~LogFileManager();
 
-    void log(const std::string& message);
+    void openLogFile(const std::string& filename);
+    void writeLog(const std::string& filename, const std::string& message);
+    std::vector<std::string> readLogs(const std::string& filename);
+    void closeLogFile(const std::string& filename);
+
+    // 복사/이동 생성자 및 대입 연산자
+    LogFileManager(const LogFileManager& other);
+    LogFileManager& operator=(const LogFileManager& other);
+    LogFileManager(LogFileManager&& other) noexcept;
+    LogFileManager& operator=(LogFileManager&& other) noexcept;
 
 private:
-    std::ofstream logFile;
-    std::mutex logMutex;
+    std::map<std::string, std::unique_ptr<std::fstream>> logFiles;
 };
-
-#endif // LOG_FILE_MANAGER_H
