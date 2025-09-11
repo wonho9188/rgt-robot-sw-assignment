@@ -2,25 +2,43 @@
 
 // 기본 생성자 및 소멸자
 LogFileManager::LogFileManager() {}
-LogFileManager::~LogFileManager() {}
+LogFileManager::~LogFileManager() {
+    for (auto& pair : logFiles) {
+        if (pair.second && pair.second->is_open()) {
+            pair.second->close();
+        }
+    }
+    logFiles.clear();
+}
 
 // 로그 파일 관리 메서드
 void LogFileManager::openLogFile(const std::string& filename) {
     if (logFiles.find(filename) == logFiles.end()) {
-        logFiles[filename] = std::make_unique<std::fstream>(filename, std::ios::in | std::ios::out | std::ios::app);
+        auto fs = std::make_unique<std::fstream>(filename, std::ios::in | std::ios::out | std::ios::app);
+        if (!fs->is_open()) {
+            throw std::runtime_error("파일 열기 실패: " + filename);
+        }
+        logFiles[filename] = std::move(fs);
     }
 }
 
 void LogFileManager::writeLog(const std::string& filename, const std::string& message) {
     auto it = logFiles.find(filename);
-    if (it != logFiles.end() && it->second && it->second->is_open()) {
-        *(it->second) << message << std::endl;
+    if (it == logFiles.end() || !it->second || !it->second->is_open()) {
+        throw std::runtime_error("파일이 열려있지 않음: " + filename);
+    }
+    *(it->second) << message << std::endl;
+    if (it->second->fail()) {
+        throw std::runtime_error("로그 쓰기 실패: " + filename);
     }
 }
 
 std::vector<std::string> LogFileManager::readLogs(const std::string& filename) {
     std::vector<std::string> logs;
     std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("로그 파일 열기 실패: " + filename);
+    }
     std::string line;
     while (std::getline(file, line)) {
         logs.push_back(line);
