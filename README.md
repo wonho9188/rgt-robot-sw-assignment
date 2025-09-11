@@ -8,8 +8,8 @@
 ```
 rgt-robot-sw-assignment/
 │
-├─ problem1/   # 문제 1: 리소스 관리 및 스마트 포인터 활용
-├─ problem2/   # 문제 2: (추가 예정)
+├─ problem1/   # 문제 1: 스마트 포인터를 활용한 리소스 관리
+├─ problem2/   # 문제 2: 템플릿과 STL을 활용한 컨테이너 설계
 ├─ problem3/   # 문제 3: (추가 예정)
 ├─ problem4/   # 문제 4: (추가 예정)
 └─ problem5/   # 문제 5: (추가 예정)

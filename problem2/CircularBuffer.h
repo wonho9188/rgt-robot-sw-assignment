@@ -35,10 +35,59 @@ public:
     T& back();
     const T& back() const;
     
-    // 이터레이터 관련 (나중에 구현)
-    // class iterator;
-    // iterator begin();
-    // iterator end();
+    // Forward iterator 구현
+    class iterator {
+    private:
+        CircularBuffer<T>* buffer_;
+        size_t current_index_;
+        size_t count_;
+        
+    public:
+        // STL 호환을 위한 타입 정의
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using reference = T&;
+        
+        // 생성자
+        iterator(CircularBuffer<T>* buffer, size_t index, size_t count = 0)
+            : buffer_(buffer), current_index_(index), count_(count) {}
+        
+        // 역참조 연산자
+        T& operator*() {
+            return buffer_->buffer[current_index_];
+        }
+        
+        // 전위 증가 연산자
+        iterator& operator++() {
+            if (count_ < buffer_->size_) {
+                current_index_ = (current_index_ + 1) % buffer_->capacity_;
+                count_++;
+            }
+            return *this;
+        }
+        
+        // 후위 증가 연산자
+        iterator operator++(int) {
+            iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+        
+        // 비교 연산자
+        bool operator==(const iterator& other) const {
+            return count_ == other.count_;
+        }
+        
+        bool operator!=(const iterator& other) const {
+            return !(*this == other);
+        }
+    };
+    
+    // begin과 end 메서드 선언
+    iterator begin();
+    iterator end();
 };
 
 // 생성자 구현
@@ -128,4 +177,16 @@ const T& CircularBuffer<T>::back() const {
     }
     size_t back_index = (tail_ - 1 + capacity_) % capacity_;  // tail 이전 위치
     return buffer[back_index];
+}
+
+// begin() 구현
+template<typename T>
+typename CircularBuffer<T>::iterator CircularBuffer<T>::begin() {
+    return iterator(this, head_, 0);  // head부터 시작, 0개 순회
+}
+
+// end() 구현  
+template<typename T>
+typename CircularBuffer<T>::iterator CircularBuffer<T>::end() {
+    return iterator(this, 0, size_);  // size개 순회 완료 시점
 }
