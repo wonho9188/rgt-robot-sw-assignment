@@ -10,6 +10,7 @@ public:
     LogFileManager();
     ~LogFileManager();
 
+    // 열기/쓰기/읽기/닫기 메서드
     void openLogFile(const std::string& filename);
     void writeLog(const std::string& filename, const std::string& message);
     std::vector<std::string> readLogs(const std::string& filename);
@@ -22,5 +23,5 @@ public:
     LogFileManager& operator=(LogFileManager&& other) noexcept;
 
 private:
-    std::map<std::string, std::unique_ptr<std::fstream>> logFiles;
+    std::map<std::string, std::shared_ptr<std::fstream>> logFiles;
 };

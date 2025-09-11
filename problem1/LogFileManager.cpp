@@ -17,7 +17,7 @@ LogFileManager::~LogFileManager() {
 // 로그 파일 관리 메서드
 void LogFileManager::openLogFile(const std::string& filename) {
     if (logFiles.find(filename) == logFiles.end()) {
-        auto fs = std::make_unique<std::fstream>(filename, std::ios::in | std::ios::out | std::ios::app);
+        auto fs = std::make_shared<std::fstream>(filename, std::ios::in | std::ios::out | std::ios::app);
         if (!fs->is_open()) {
             throw std::runtime_error("파일 열기 실패: " + filename);
         }
@@ -70,19 +70,28 @@ void LogFileManager::closeLogFile(const std::string& filename) {
     }
 }
 
-// 복사/이동 생성자 및 대입 연산자
+// 복사 생성자 
 LogFileManager::LogFileManager(const LogFileManager& other) {
-
+    logFiles = other.logFiles;
 }
 
+// 복사 대입 연산자
 LogFileManager& LogFileManager::operator=(const LogFileManager& other) {
+    if (this != &other) {
+        logFiles = other.logFiles;
+    }
     return *this;
 }
 
+// 이동 생성자
 LogFileManager::LogFileManager(LogFileManager&& other) noexcept {
-
+    logFiles = std::move(other.logFiles);
 }
 
+// 이동 대입 연산자
 LogFileManager& LogFileManager::operator=(LogFileManager&& other) noexcept {
+    if (this != &other) {
+        logFiles = std::move(other.logFiles);
+    }
     return *this;
 }
