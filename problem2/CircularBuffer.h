@@ -1,0 +1,70 @@
+#pragma once
+#include <stdexcept>
+#include <iterator>
+
+template<typename T>
+class CircularBuffer {
+private:
+    T* buffer;           // 실제 데이터를 저장할 배열
+    size_t capacity_;    // 버퍼의 최대 크기
+    size_t size_;        // 현재 저장된 데이터 개수
+    size_t head_;        // 첫 번째 데이터의 인덱스
+    size_t tail_;        // 마지막 데이터의 다음 인덱스
+
+public:
+    // 생성자
+    explicit CircularBuffer(size_t capacity);
+    
+    // 소멸자
+    ~CircularBuffer();
+    
+    // 복사 생성자 및 대입 연산자 (나중에 구현)
+    CircularBuffer(const CircularBuffer& other) = delete;
+    CircularBuffer& operator=(const CircularBuffer& other) = delete;
+    
+    // 기본 메서드 선언
+    size_t size() const;
+    size_t capacity() const;
+    bool empty() const;
+    
+    // 데이터 추가/삭제/접근 메서드 선언
+    void push_back(const T& item);
+    void pop_front();
+    T& front();
+    const T& front() const;
+    T& back();
+    const T& back() const;
+    
+    // 이터레이터 관련 (나중에 구현)
+    // class iterator;
+    // iterator begin();
+    // iterator end();
+};
+
+// 생성자 구현
+template<typename T>
+CircularBuffer<T>::CircularBuffer(size_t capacity) 
+    : capacity_(capacity), size_(0), head_(0), tail_(0) {
+    buffer = new T[capacity_];
+}
+
+// 소멸자 구현
+template<typename T>
+CircularBuffer<T>::~CircularBuffer() {
+    delete[] buffer;
+}
+
+template<typename T>
+size_t CircularBuffer<T>::size() const {
+    return size_;
+}
+
+template<typename T>
+size_t CircularBuffer<T>::capacity() const {
+    return capacity_;
+}
+
+template<typename T>
+bool CircularBuffer<T>::empty() const {
+    return size_ == 0;
+}
