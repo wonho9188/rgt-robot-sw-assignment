@@ -68,3 +68,64 @@ template<typename T>
 bool CircularBuffer<T>::empty() const {
     return size_ == 0;
 }
+
+// push_back 구현
+template<typename T>
+void CircularBuffer<T>::push_back(const T& item) {
+    buffer[tail_] = item;                    
+    tail_ = (tail_ + 1) % capacity_;        
+    
+    if (size_ < capacity_) {
+        size_++;                             
+    } else {
+        head_ = (head_ + 1) % capacity_;     
+    }
+}
+
+// pop_front 구현
+template<typename T>
+void CircularBuffer<T>::pop_front() {
+    if (empty()) {
+        throw std::runtime_error("빈 버퍼에서 pop_front() 호출");
+    }
+    head_ = (head_ + 1) % capacity_;       
+    size_--;                                
+}
+
+// front 구현 (non-const)
+template<typename T>
+T& CircularBuffer<T>::front() {
+    if (empty()) {
+        throw std::runtime_error("빈 버퍼에서 front() 호출");
+    }
+    return buffer[head_];                    // head 위치의 데이터 반환
+}
+
+// front 구현 (const)
+template<typename T>
+const T& CircularBuffer<T>::front() const {
+    if (empty()) {
+        throw std::runtime_error("빈 버퍼에서 front() 호출");
+    }
+    return buffer[head_];                    // head 위치의 데이터 반환
+}
+
+// back 구현 (non-const)
+template<typename T>
+T& CircularBuffer<T>::back() {
+    if (empty()) {
+        throw std::runtime_error("빈 버퍼에서 back() 호출");
+    }
+    size_t back_index = (tail_ - 1 + capacity_) % capacity_;  // tail 이전 위치
+    return buffer[back_index];
+}
+
+// back 구현 (const)
+template<typename T>
+const T& CircularBuffer<T>::back() const {
+    if (empty()) {
+        throw std::runtime_error("빈 버퍼에서 back() 호출");
+    }
+    size_t back_index = (tail_ - 1 + capacity_) % capacity_;  // tail 이전 위치
+    return buffer[back_index];
+}
