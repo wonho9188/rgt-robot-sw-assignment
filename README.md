@@ -52,6 +52,7 @@ rgt-robot-sw-assignment/
 1. MSYS2 또는 MinGW-w64 설치 후, 환경 변수 PATH에 `mingw64\bin` 폴더 추가
 2. MSYS2 터미널(MINGW64)에서 아래 명령어 실행:
     ```
+    (1번 문제 예시)
     cd /c/Users/본인계정/Desktop/rgt-robot-sw-assignment/problem1 (예시 경로입니다. 해당 레포지토리가 저장된 경로에 맞춰주세요.)
     g++ -std=c++17 -o test main.cpp LogFileManager.cpp
     ./test.exe

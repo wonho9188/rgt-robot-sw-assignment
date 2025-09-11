@@ -1,4 +1,7 @@
 #include "LogFileManager.h"
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 // 기본 생성자 및 소멸자
 LogFileManager::LogFileManager() {}
@@ -27,7 +30,20 @@ void LogFileManager::writeLog(const std::string& filename, const std::string& me
     if (it == logFiles.end() || !it->second || !it->second->is_open()) {
         throw std::runtime_error("파일이 열려있지 않음: " + filename);
     }
-    *(it->second) << message << std::endl;
+
+    // 타임스탬프 생성
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm tm;
+#ifdef _WIN32
+    localtime_s(&tm, &now_c);
+#else
+    localtime_r(&now_c, &tm);
+#endif
+    std::ostringstream oss;
+    oss << "[" << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << "] " << message;
+
+    *(it->second) << oss.str() << std::endl;
     if (it->second->fail()) {
         throw std::runtime_error("로그 쓰기 실패: " + filename);
     }
