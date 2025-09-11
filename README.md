@@ -40,3 +40,46 @@ rgt-robot-sw-assignment/
 [fix] problem1: 파일 열기 예외 처리 추가
 [docs] problem1: README 핵심 역량 정리
 ```
+
+--- 
+### 실행 환경 및 설치 안내
+
+- **운영체제:** Windows 10/11
+- **필수 소프트웨어:**
+  - [MSYS2](https://www.msys2.org/) 또는 [MinGW-w64](https://www.mingw-w64.org/) (g++ 컴파일러 포함)
+
+#### MSYS2/MinGW-w64 설치 및 g++ 사용법
+1. MSYS2 또는 MinGW-w64 설치 후, 환경 변수 PATH에 `mingw64\bin` 폴더 추가
+2. MSYS2 터미널(MINGW64)에서 아래 명령어 실행:
+    ```
+    cd /c/Users/본인계정/Desktop/rgt-robot-sw-assignment/problem1 (예시 경로입니다. 해당 레포지토리가 저장된 경로에 맞춰주세요.)
+    g++ -std=c++17 -o test main.cpp LogFileManager.cpp
+    ./test.exe
+    ```
+
+#### Visual Studio 사용법
+1. Visual Studio에서 새 콘솔 프로젝트 생성
+2. main.cpp, LogFileManager.cpp, LogFileManager.h 파일을 프로젝트에 추가
+3. 빌드 후 실행
+
+---
+### g++ 컴파일 안될 때
+MSYS2의 bin 폴더(예: bin)를 Windows 환경 변수 PATH에 추가해야
+Windows 터미널(명령 프롬프트, PowerShell, VS Code 터미널 등)에서 g++ 명령을 쓸 수 있습니다.
+
+추가 방법
+
+bin 폴더 경로 복사 (예: `C:\msys64\mingw64\bin`)
+
+환경 변수 편집
+```
+Windows 검색창에 “환경 변수” 입력 →
+시스템 환경 변수 편집 클릭 →
+아래쪽 “환경 변수(N)...” 버튼 클릭
+“시스템 변수” 또는 “사용자 변수”에서 Path 선택 → “편집” 클릭
+“새로 만들기” 클릭 →
+bin 폴더 경로 붙여넣기 → “확인”으로 창 닫기
+터미널 재시작
+```
+
+모든 터미널(명령 프롬프트, PowerShell, VS Code 터미널 등)을 완전히 닫았다가 다시 엽니다.

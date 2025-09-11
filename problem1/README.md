@@ -2,7 +2,7 @@
 ### 요구 역량
 - C++ 스마트 포인터를 활용한 리소스(파일 핸들) 안정 관리
 - 파일 입출력 및 예외 처리
-- 클래스 설계(캡슐화, 접근 제ㅇ한자, Rule of Three/Five)
+- 클래스 설계(캡슐화, 접근 제한자, Rule of Three/Five)
 - STL 컨테이너 및 문자열 처리
 - 타임 스탬프 기반 로그 기록
 
@@ -16,3 +16,10 @@
 ### 예시
 - 여러 로그 파일을 열고, 각 파일에 로그를 기록 및 읽기
 - 로그는 [YYYY-MM-DD HH:MM:SS] 메시지 형식으로 저장
+
+### 컴파일 방법
+```
+cd problem1/
+g++ -std=c++17 -o test main.cpp LogFileManager.cpp
+test.exe
+```
