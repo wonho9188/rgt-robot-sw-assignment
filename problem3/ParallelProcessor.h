@@ -17,7 +17,7 @@ private:
     size_t thread_count_;
     std::vector<std::thread> workers_;
     std::queue<std::function<void()>> tasks_;
-    std::mutex queue_mutex_;
+    std::mutex queue_mutex_;    
     std::condition_variable condition_;
     bool stop_;
 
@@ -39,16 +39,12 @@ public:
     // 유틸리티 함수들
     size_t get_thread_count() const;
 
-    // 대기 중인 작업 수 반환
-    size_t pending_tasks() const;
-
 private:
     // 스레드 풀 관련 내부 함수들
     void worker_thread();
     void enqueue_task(std::function<void()> task);
 
     // 스레드 풀 초기화/정리 함수
-    void initialize_workers();
     void shutdown_workers();
 };
 
@@ -148,17 +144,6 @@ std::vector<ReturnType> ParallelProcessor<T>::parallel_map(
 template<typename T>
 size_t ParallelProcessor<T>::get_thread_count() const {
     return thread_count_;
-}
-
-template<typename T>
-size_t ParallelProcessor<T>::pending_tasks() const {
-    std::lock_guard<std::mutex> lock(queue_mutex_);
-    return tasks_.size();
-}
-
-template<typename T>
-void ParallelProcessor<T>::initialize_workers() {
-    // 생성자에서 이미 처리됨
 }
 
 template<typename T>

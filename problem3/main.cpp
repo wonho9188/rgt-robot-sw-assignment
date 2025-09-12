@@ -25,7 +25,7 @@ int main() {
         auto start_seq = std::chrono::high_resolution_clock::now();
         std::vector<int> sequential_result(pixelData.size());
         for (size_t i = 0; i < pixelData.size(); ++i) {
-            // CPU 집약적 작업으로 변경
+            // CPU 집약적 작업
             double sum = 0;
             for (int j = 0; j < 100; ++j) {
                 sum += std::sin(static_cast<double>(i + j)) * std::cos(static_cast<double>(i - j));
