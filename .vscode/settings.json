@@ -63,6 +63,16 @@
         "optional": "cpp",
         "sstream": "cpp",
         "algorithm": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "coroutine": "cpp",
+        "resumable": "cpp",
+        "functional": "cpp",
+        "future": "cpp",
+        "list": "cpp",
+        "queue": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp"
     }
 }
