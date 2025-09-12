@@ -11,26 +11,24 @@ int main() {
     try {
         std::cout << "=== ParallelProcessor Test Started ===" << std::endl;
         
-        // 1. 테스트 데이터 생성 (1,000,000개 픽셀 데이터)
-        std::vector<int> pixelData(1000000);
-        std::iota(pixelData.begin(), pixelData.end(), 0); // 0, 1, 2, ..., 999999
-        
+        // 1. 테스트 데이터 생성 (1,000개 픽셀 데이터) 
+        // sleep_for를 1μs에서 1ms로 변경하면서 100만개 -> 1000개로 줄임
+        // ㄴ os 스케줄링 오버헤드가 1μs 단위로는 성능 측정에 방해가 됨
+        std::vector<int> pixelData(1000);
+        std::iota(pixelData.begin(), pixelData.end(), 0); // 0, 1, 2, ..., 999
+
         // 2. ParallelProcessor 생성 (4개 스레드)
         ParallelProcessor<int> processor(4);
         std::cout << "ParallelProcessor created successfully (Thread count: " 
                   << processor.get_thread_count() << ")" << std::endl;
         
-        // 3. 순차 처리 시간 측정 (비교용) - CPU 집약적 작업
+        // 3. 순차 처리 시간 측정 (비교용)
         std::cout << "\n=== Sequential Processing Test ===" << std::endl;
         auto start_seq = std::chrono::high_resolution_clock::now();
         std::vector<int> sequential_result(pixelData.size());
         for (size_t i = 0; i < pixelData.size(); ++i) {
-            // CPU 집약적 작업
-            double sum = 0;
-            for (int j = 0; j < 100; ++j) {
-                sum += std::sin(static_cast<double>(i + j)) * std::cos(static_cast<double>(i - j));
-            }
-            sequential_result[i] = std::min(255, static_cast<int>(sum) + 50);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            sequential_result[i] = std::min(255, static_cast<int>(i) + 50);
         }
         auto end_seq = std::chrono::high_resolution_clock::now();
         auto sequential_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_seq - start_seq);
@@ -38,16 +36,12 @@ int main() {
         // 4. 병렬 처리 - 이미지 밝기 증가 테스트
         std::cout << "\n=== Parallel Processing Test ===" << std::endl;
         auto start_parallel = std::chrono::high_resolution_clock::now();
-        
+
         auto brightenedImage = processor.parallel_map(pixelData, [](int pixel) {
-            // 동일한 CPU 집약적 작업
-            double sum = 0;
-            for (int j = 0; j < 100; ++j) {
-                sum += std::sin(static_cast<double>(pixel + j)) * std::cos(static_cast<double>(pixel - j));
-            }
-            return std::min(255, static_cast<int>(sum) + 50);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            return std::min(255, pixel + 50); // 문제 예제와 동일
         });
-        
+
         auto end_parallel = std::chrono::high_resolution_clock::now();
         auto parallel_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_parallel - start_parallel);
         
@@ -56,7 +50,7 @@ int main() {
         std::cout << "brightenedImage[0] = " << brightenedImage[0] << "  // 0 + 50" << std::endl;
         std::cout << "brightenedImage[1] = " << brightenedImage[1] << "  // 1 + 50" << std::endl;
         std::cout << "brightenedImage[100] = " << brightenedImage[100] << " // 100 + 50" << std::endl;
-        std::cout << "brightenedImage[999999] = " << brightenedImage[999999] << " // min(255, 999999 + 50)" << std::endl;
+        std::cout << "brightenedImage[999] = " << brightenedImage[999] << " // min(255, 999 + 50)" << std::endl;
         
         // 6. 픽셀을 문자열로 변환 테스트
         auto pixelStrings = processor.parallel_map(pixelData, [](int pixel) -> std::string {
