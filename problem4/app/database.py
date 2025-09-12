@@ -2,19 +2,26 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# TODO: Configure database URL
-DATABASE_URL = "postgresql://user:password@localhost/library_db"
+# Database configuration
+# For development, using SQLite. In production, use PostgreSQL
+DATABASE_URL = "sqlite:///./library.db"
 
-# TODO: Create database engine
-engine = None
+# Create SQLAlchemy engine
+engine = create_engine(
+    DATABASE_URL, 
+    connect_args={"check_same_thread": False}  # Only needed for SQLite
+)
 
-# TODO: Create session factory
-SessionLocal = None
+# Create session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# TODO: Create base class for models
+# Create base class for models
 Base = declarative_base()
 
 def get_db():
     """Dependency to get database session"""
-    # TODO: Implement database session management
-    pass
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

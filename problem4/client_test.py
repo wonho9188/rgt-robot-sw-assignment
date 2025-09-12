@@ -8,14 +8,15 @@ class LibraryAPIClient:
         self.base_url = base_url
         self.token = None
     
-    def register(self, username, email, password):
+    def signup(self, username, email, password, full_name):
         """Register a new user"""
         data = {
             "username": username,
             "email": email,
-            "password": password
+            "password": password,
+            "full_name": full_name
         }
-        response = requests.post(f"{self.base_url}/auth/register", json=data)
+        response = requests.post(f"{self.base_url}/auth/signup", json=data)
         return response.json()
     
     def login(self, username, password):
@@ -24,7 +25,7 @@ class LibraryAPIClient:
             "username": username,
             "password": password
         }
-        response = requests.post(f"{self.base_url}/auth/token", data=data)
+        response = requests.post(f"{self.base_url}/auth/login", data=data)
         if response.status_code == 200:
             token_data = response.json()
             self.token = token_data["access_token"]
@@ -41,13 +42,15 @@ class LibraryAPIClient:
         response = requests.get(f"{self.base_url}/auth/me", headers=self.get_headers())
         return response.json()
     
-    def create_book(self, title, author, isbn, published_year):
+    def create_book(self, title, author, isbn, category, published_year, total_copies):
         """Create a new book"""
         data = {
             "title": title,
             "author": author,
             "isbn": isbn,
-            "published_year": published_year
+            "category": category,
+            "published_year": published_year,
+            "total_copies": total_copies
         }
         response = requests.post(f"{self.base_url}/books/", json=data, headers=self.get_headers())
         return response.json()
@@ -90,7 +93,7 @@ if __name__ == "__main__":
     # Test registration
     print("\n1. Testing user registration...")
     try:
-        result = client.register("testuser", "test@example.com", "testpassword")
+        result = client.signup("testuser", "test@example.com", "testpassword", "Test User")
         print(f"Registration result: {result}")
     except Exception as e:
         print(f"Registration error: {e}")
@@ -114,7 +117,7 @@ if __name__ == "__main__":
     # Test create book
     print("\n4. Testing book creation...")
     try:
-        result = client.create_book("Test Book", "Test Author", "123456789", 2023)
+        result = client.create_book("Test Book", "Test Author", "123456789", "Fiction", 2023, 5)
         print(f"Book creation result: {result}")
     except Exception as e:
         print(f"Book creation error: {e}")

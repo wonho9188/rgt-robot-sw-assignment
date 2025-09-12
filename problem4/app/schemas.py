@@ -4,48 +4,63 @@ from datetime import datetime
 
 # User Schemas
 class UserBase(BaseModel):
-    # TODO: Define base user fields
-    pass
+    username: str
+    email: EmailStr
+    full_name: str
 
 class UserCreate(UserBase):
-    # TODO: Define user creation fields
-    pass
+    password: str
 
 class User(UserBase):
-    # TODO: Define user response fields
-    pass
+    id: int
+    is_active: bool
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # Book Schemas
 class BookBase(BaseModel):
-    # TODO: Define base book fields
-    pass
+    title: str
+    author: str
+    isbn: str
+    category: str
+    published_year: int
+    total_copies: int
 
 class BookCreate(BookBase):
-    # TODO: Define book creation fields
     pass
 
 class Book(BookBase):
-    # TODO: Define book response fields
-    pass
+    id: int
+    is_available: bool
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # Loan Schemas
 class LoanBase(BaseModel):
-    # TODO: Define base loan fields
-    pass
+    user_id: int
+    book_id: int
 
 class LoanCreate(LoanBase):
-    # TODO: Define loan creation fields
     pass
 
 class Loan(LoanBase):
-    # TODO: Define loan response fields
-    pass
+    id: int
+    loan_date: datetime
+    due_date: datetime
+    return_date: Optional[datetime] = None
+    is_returned: bool
+    
+    class Config:
+        from_attributes = True
 
 # Authentication Schemas
 class Token(BaseModel):
-    # TODO: Define token response fields
-    pass
+    access_token: str
+    token_type: str
 
 class TokenData(BaseModel):
-    # TODO: Define token data fields
-    pass
+    username: Optional[str] = None
