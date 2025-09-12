@@ -162,20 +162,25 @@ python client_test.py
 #### 5. 프로젝트 구조
 ```
 problem4/
-├── main.py              # FastAPI 앱 진입점
-├── requirements.txt     # 의존성 패키지
-├── client_test.py       # 클라이언트 테스트 스크립트
-├── library.db           # SQLite 데이터베이스 (자동 생성)
-└── app/
-    ├── database.py      # 데이터베이스 연결 설정
-    ├── models.py        # SQLAlchemy 모델
-    ├── schemas.py       # Pydantic 스키마
-    ├── auth.py          # JWT 인증 유틸리티
-    ├── crud.py          # 데이터베이스 CRUD 작업
-    └── routers/
-        ├── auth.py      # 인증 관련 라우터
-        ├── books.py     # 도서 관리 라우터
-        └── loans.py     # 대출 관리 라우터
+├── app/
+│   ├── __init__.py
+│   ├── database.py        # 데이터베이스 연결 설정
+│   ├── models.py          # SQLAlchemy 모델 (User, Book, Loan)
+│   ├── schemas.py         # Pydantic 스키마
+│   ├── auth.py           # JWT 인증 관련 함수
+│   ├── crud.py           # 데이터베이스 CRUD 작업
+│   └── routers/
+│       ├── __init__.py
+│       ├── auth.py       # 인증 API 엔드포인트
+│       ├── books.py      # 도서 관리 API 엔드포인트
+│       └── loans.py      # 대출/반납 API 엔드포인트
+├── tests/
+│   ├── __init__.py
+│   └── test_main.py      # 단위 테스트
+├── main.py               # FastAPI 앱 메인 파일
+├── client_test.py        # API 테스트용 클라이언트
+├── requirements.txt      # 패키지 의존성
+└── README.md            # 프로젝트 문서
 ```
 
 #### 6. 성능 확인 항목
