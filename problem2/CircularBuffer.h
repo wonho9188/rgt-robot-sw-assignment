@@ -43,13 +43,6 @@ public:
         size_t count_;
         
     public:
-        // STL 호환을 위한 타입 정의
-        using iterator_category = std::forward_iterator_tag;
-        using value_type = T;
-        using difference_type = std::ptrdiff_t;
-        using pointer = T*;
-        using reference = T&;
-        
         // 생성자
         iterator(CircularBuffer<T>* buffer, size_t index, size_t count = 0)
             : buffer_(buffer), current_index_(index), count_(count) {}
@@ -135,7 +128,7 @@ void CircularBuffer<T>::push_back(const T& item) {
 template<typename T>
 void CircularBuffer<T>::pop_front() {
     if (empty()) {
-        throw std::runtime_error("빈 버퍼에서 pop_front() 호출");
+        throw std::runtime_error("Calling pop_front() on an empty buffer");
     }
     head_ = (head_ + 1) % capacity_;       
     size_--;                                
@@ -145,7 +138,7 @@ void CircularBuffer<T>::pop_front() {
 template<typename T>
 T& CircularBuffer<T>::front() {
     if (empty()) {
-        throw std::runtime_error("빈 버퍼에서 front() 호출");
+        throw std::runtime_error("Calling front() on an empty buffer");
     }
     return buffer[head_];                    // head 위치의 데이터 반환
 }
@@ -154,7 +147,7 @@ T& CircularBuffer<T>::front() {
 template<typename T>
 const T& CircularBuffer<T>::front() const {
     if (empty()) {
-        throw std::runtime_error("빈 버퍼에서 front() 호출");
+        throw std::runtime_error("Calling front() on an empty buffer");
     }
     return buffer[head_];                    // head 위치의 데이터 반환
 }
@@ -163,7 +156,7 @@ const T& CircularBuffer<T>::front() const {
 template<typename T>
 T& CircularBuffer<T>::back() {
     if (empty()) {
-        throw std::runtime_error("빈 버퍼에서 back() 호출");
+        throw std::runtime_error("Calling back() on an empty buffer");
     }
     size_t back_index = (tail_ - 1 + capacity_) % capacity_;  // tail 이전 위치
     return buffer[back_index];
@@ -173,7 +166,7 @@ T& CircularBuffer<T>::back() {
 template<typename T>
 const T& CircularBuffer<T>::back() const {
     if (empty()) {
-        throw std::runtime_error("빈 버퍼에서 back() 호출");
+        throw std::runtime_error("Calling back() on an empty buffer");
     }
     size_t back_index = (tail_ - 1 + capacity_) % capacity_;  // tail 이전 위치
     return buffer[back_index];
