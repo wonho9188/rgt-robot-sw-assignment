@@ -5,24 +5,24 @@ from passlib.context import CryptContext
 from fastapi import HTTPException, status
 from .schemas import TokenData
 
-# JWT settings
+# JWT 설정
 SECRET_KEY = "your-secret-key-here-please-change-in-production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Password hashing context
+# 비밀번호 해싱 컨텍스트
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against its hash"""
+    """평문 비밀번호와 해시를 비교하여 검증"""
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password: str) -> str:
-    """Hash a password"""
+    """비밀번호를 해시화"""
     return pwd_context.hash(password)
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    """Create JWT access token"""
+    """JWT 액세스 토큰 생성"""
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -33,7 +33,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 def verify_token(token: str, credentials_exception):
-    """Verify JWT token"""
+    """JWT 토큰 검증"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")

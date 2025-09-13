@@ -11,10 +11,10 @@ router = APIRouter(
     tags=["authentication"]
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    """Get current user from JWT token"""
+    """JWT 토큰에서 현재 사용자 조회"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -28,7 +28,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 @router.post("/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    """Register new user"""
+    """새 사용자 등록"""
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
@@ -41,7 +41,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    """Login and get access token"""
+    """로그인 및 액세스 토큰 발급"""
     user = crud.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -57,5 +57,21 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 
 @router.get("/me", response_model=schemas.User)
 def read_users_me(current_user: schemas.User = Depends(get_current_user)):
-    """Get current user profile"""
+    """현재 사용자 프로필 조회"""
     return current_user
+
+@router.put("/me", response_model=schemas.User)
+def update_user_profile(user_update: schemas.UserCreate, current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """현재 사용자 프로필 업데이트"""
+    updated_user = crud.update_user(db, user_id=current_user.id, user=user_update)
+    if not updated_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return updated_user
+
+@router.delete("/me")
+def delete_user_account(current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """현재 사용자 계정 삭제"""
+    deleted_user = crud.delete_user(db, user_id=current_user.id)
+    if not deleted_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User account deleted successfully"}

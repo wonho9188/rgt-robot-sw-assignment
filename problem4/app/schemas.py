@@ -2,13 +2,17 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
-# User Schemas
+# 사용자 스키마
 class UserBase(BaseModel):
     username: str
     email: EmailStr
     full_name: str
 
 class UserCreate(UserBase):
+    password: str
+
+class UserLogin(BaseModel):
+    username: str
     password: str
 
 class User(UserBase):
@@ -19,13 +23,12 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
-# Book Schemas
+# 도서 스키마
 class BookBase(BaseModel):
     title: str
     author: str
     isbn: str
     category: str
-    published_year: int
     total_copies: int
 
 class BookCreate(BookBase):
@@ -39,7 +42,7 @@ class Book(BookBase):
     class Config:
         from_attributes = True
 
-# Loan Schemas
+# 대출 스키마
 class LoanBase(BaseModel):
     user_id: int
     book_id: int
@@ -57,7 +60,7 @@ class Loan(LoanBase):
     class Config:
         from_attributes = True
 
-# Authentication Schemas
+# 인증 스키마
 class Token(BaseModel):
     access_token: str
     token_type: str

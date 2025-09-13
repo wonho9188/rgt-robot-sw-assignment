@@ -4,7 +4,7 @@ from datetime import datetime
 from .database import Base
 
 class User(Base):
-    """User model for authentication and user management"""
+    """사용자 인증 및 관리를 위한 사용자 모델"""
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -15,11 +15,11 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Relationship to loans
+    # 대출과의 관계
     loans = relationship("Loan", back_populates="user")
 
 class Book(Base):
-    """Book model for library inventory"""
+    """도서관 도서 관리를 위한 도서 모델"""
     __tablename__ = "books"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -27,16 +27,15 @@ class Book(Base):
     author = Column(String, index=True, nullable=False)
     isbn = Column(String, unique=True, index=True, nullable=False)
     category = Column(String, nullable=False)
-    published_year = Column(Integer, nullable=False)
     total_copies = Column(Integer, nullable=False, default=1)
     is_available = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Relationship to loans
+    # 대출과의 관계
     loans = relationship("Loan", back_populates="book")
 
 class Loan(Base):
-    """Loan model for tracking book borrowing"""
+    """도서 대출 추적을 위한 대출 모델"""
     __tablename__ = "loans"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -47,6 +46,6 @@ class Loan(Base):
     return_date = Column(DateTime, nullable=True)
     is_returned = Column(Boolean, default=False)
     
-    # Relationships
+    # 관계 설정
     user = relationship("User", back_populates="loans")
     book = relationship("Book", back_populates="loans")

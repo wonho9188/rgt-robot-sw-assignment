@@ -134,12 +134,33 @@ book_response = requests.post(f"{base_url}/books", json=book_data, headers=heade
 
 ### 실행 방법
 
-#### 1. 의존성 설치
+#### 0. 사전 요구사항
+- **Python 3.8 이상** 필수 (Python 3.11 권장)
+- **pip** 패키지 관리자
+
+#### 1. 프로젝트 클론 및 디렉토리 이동
+```bash
+git clone https://github.com/wonho9188/rgt-robot-sw-assignment.git
+cd rgt-robot-sw-assignment/problem4
+```
+
+#### 2. 가상환경 생성 및 활성화 (권장)
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 3. 의존성 설치
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 2. 서버 실행
+#### 4. 서버 실행
 ```bash
 # 방법 1: Python으로 직접 실행
 python main.py
@@ -148,18 +169,23 @@ python main.py
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### 3. API 문서 확인
+#### 5. API 문서 및 테스트
 서버 실행 후 브라우저에서 접속:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- **Swagger UI**: http://localhost:8000/docs (권장)
+- **ReDoc**: http://localhost:8000/redoc
+- **서버 상태 확인**: http://localhost:8000/health
 
-#### 4. 클라이언트 테스트
+#### 6. 클라이언트 테스트 실행
 ```bash
 # 서버가 실행된 상태에서 별도 터미널에서
 python client_test.py
 ```
 
-#### 5. 프로젝트 구조
+#### 7. 데이터베이스 파일
+- SQLite 데이터베이스 파일 `library.db`가 자동으로 생성됩니다
+- 서버 첫 실행 시 테이블이 자동으로 생성됩니다
+
+#### 8. 프로젝트 구조
 ```
 problem4/
 ├── app/
@@ -183,17 +209,26 @@ problem4/
 └── README.md            # 프로젝트 문서
 ```
 
-#### 6. 성능 확인 항목
-- [ ] 회원가입/로그인 기능 동작
-- [ ] JWT 토큰 기반 인증 작동
-- [ ] 도서 CRUD 작업 수행
-- [ ] 대출/반납 시스템 동작
-- [ ] 데이터 검증 및 에러 처리
-- [ ] API 문서 자동 생성
-- [ ] 클라이언트 테스트 스크립트 통과
-
 ### 참고사항
 - SQLite 데이터베이스를 사용하여 별도 DB 설치 불필요
 - FastAPI의 자동 문서화 기능으로 API 명세 확인 가능
 - Bearer 토큰 방식의 인증으로 보안성 확보
 - 관계형 데이터베이스 설계로 데이터 일관성 보장
+
+### 문제 해결 (Troubleshooting)
+
+#### 포트 충돌 해결
+```bash
+# 8000 포트가 이미 사용 중인 경우 다른 포트 사용
+uvicorn main:app --reload --host 0.0.0.0 --port 8080
+```
+
+#### Python 버전 확인
+```bash
+python --version  # Python 3.8 이상이어야 함
+```
+
+#### 가상환경 비활성화
+```bash
+deactivate
+```
